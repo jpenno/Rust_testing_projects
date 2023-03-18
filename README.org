@@ -1,0 +1,7 @@
+* rust_testing_projects
+
+
+** template .projectile file
+#+begin_src
+- /target
+#+end_src
