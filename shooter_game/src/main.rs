@@ -1,8 +1,11 @@
 use bevy::{prelude::*, window::PrimaryWindow};
 
 mod player;
+mod bullet;
+
 
 use crate::player::*;
+use crate::bullet::*;
 
 fn main() {
     App::new()
@@ -17,6 +20,7 @@ fn main() {
             ..default()
         }))
         .add_plugin(PlayerPlugin)
+        .add_plugin(BulletPlugin)
         // add start up systems
         .add_startup_system(spawn_camera)
         .run();
