@@ -7,7 +7,15 @@ use crate::player::*;
 fn main() {
     App::new()
         // add Plugins
-        .add_plugins(DefaultPlugins)
+        // .add_plugins(DefaultPlugins)
+        .add_plugins(DefaultPlugins.set(WindowPlugin {
+            primary_window: Some(Window {
+                title: "Shooter Game".into(),
+                resolution: (700., 900.).into(),
+                ..default()
+            }),
+            ..default()
+        }))
         .add_plugin(PlayerPlugin)
         // add start up systems
         .add_startup_system(spawn_camera)
