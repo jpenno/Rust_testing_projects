@@ -1,7 +1,11 @@
+use std::time::Duration;
+
 use bevy::{prelude::*, window::PrimaryWindow};
 
 use crate::bullet::components::*;
 use crate::player::components::*;
+
+use super::resources::PlayerShootTimer;
 
 pub const PLAYER_SIZE: f32 = 64.0; // This is the player sprite size
 pub const PLAYER_SPEED: f32 = 500.0;
@@ -14,17 +18,11 @@ pub fn spawn_player(
     asset_server: Res<AssetServer>,
 ) {
     let window = window_query.get_single().unwrap();
-    println!("test");
 
     commands.spawn((
         SpriteBundle {
             transform: Transform::from_xyz(window.width() / 2.0, PLAYER_SIZE, 0.0),
             texture: asset_server.load("sprites/ball_blue_large.png"),
-            // code to change the size of a sprite
-            // sprite: Sprite {
-            //     custom_size: Some(Vec2::new(500.0, 500.0)),
-            //     ..default()
-            // },
             ..default()
         },
         Player {},
@@ -96,16 +94,28 @@ pub fn confine_player_movement(
     player_transform.translation = translation;
 }
 
+pub fn tick_player_shoot_timer(mut player_shoot_timer: ResMut<PlayerShootTimer>, time: Res<Time>) {
+    player_shoot_timer.timer.tick(time.delta());
+}
+
 pub fn player_shoot(
     player_query: Query<&Transform, With<Player>>,
     mut commands: Commands,
     asset_server: Res<AssetServer>,
     keyboard_input: Res<Input<KeyCode>>,
+    mut player_shoot_timer: ResMut<PlayerShootTimer>,
 ) {
     let Ok(player_transform) = player_query.get_single() else {return};
+
+    if keyboard_input.pressed(KeyCode::E) {
+        player_shoot_timer
+            .timer
+            .set_duration(Duration::from_secs_f32(0.1));
+    }
+
     let player_translation = player_transform.translation;
 
-    if keyboard_input.pressed(KeyCode::Space) {
+    if player_shoot_timer.timer.finished() && keyboard_input.pressed(KeyCode::Space) {
         commands.spawn((
             SpriteBundle {
                 transform: Transform::from_xyz(
@@ -121,7 +131,10 @@ pub fn player_shoot(
                 },
                 ..default()
             },
-            Bullet { ..default() },
+            Bullet {
+                size: BULLET_SIZE,
+                ..default()
+            },
         ));
     }
 }
