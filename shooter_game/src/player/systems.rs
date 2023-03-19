@@ -116,6 +116,9 @@ pub fn player_shoot(
     let player_translation = player_transform.translation;
 
     if player_shoot_timer.timer.finished() && keyboard_input.pressed(KeyCode::Space) {
+
+        player_shoot_timer.timer.reset();
+
         commands.spawn((
             SpriteBundle {
                 transform: Transform::from_xyz(

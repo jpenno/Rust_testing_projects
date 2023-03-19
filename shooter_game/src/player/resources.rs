@@ -10,7 +10,7 @@ pub struct PlayerShootTimer {
 impl Default for PlayerShootTimer {
     fn default() -> Self {
         PlayerShootTimer {
-            timer: Timer::from_seconds(PLAYER_SHOOT_TIME, TimerMode::Repeating),
+            timer: Timer::from_seconds(PLAYER_SHOOT_TIME, TimerMode::Once),
         }
     }
 }

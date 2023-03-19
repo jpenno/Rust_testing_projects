@@ -11,7 +11,7 @@ impl Default for Bullet {
     fn default() -> Self {
         Bullet {
             direction: Vec3 { x: 0.0, y: 1.0, z: 0.0 },
-            speed: 50.0,
+            speed: 700.0,
             size: 32.0,
         }
     }
