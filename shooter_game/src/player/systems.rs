@@ -105,39 +105,33 @@ pub fn player_shoot(
     keyboard_input: Res<Input<KeyCode>>,
     mut player_shoot_timer: ResMut<PlayerShootTimer>,
 ) {
-    let Ok(player_transform) = player_query.get_single() else {return};
-
-    if keyboard_input.pressed(KeyCode::E) {
-        player_shoot_timer
-            .timer
-            .set_duration(Duration::from_secs_f32(0.1));
+    if !(player_shoot_timer.timer.finished() && keyboard_input.pressed(KeyCode::Space)) {
+        return;
     }
 
+    let Ok(player_transform) = player_query.get_single() else {return};
     let player_translation = player_transform.translation;
 
-    if player_shoot_timer.timer.finished() && keyboard_input.pressed(KeyCode::Space) {
+    player_shoot_timer.timer.reset();
 
-        player_shoot_timer.timer.reset();
-
-        commands.spawn((
-            SpriteBundle {
-                transform: Transform::from_xyz(
-                    player_translation.x,
-                    player_translation.y + PLAYER_SIZE / 2.0,
-                    0.0,
-                ),
-                texture: asset_server.load("sprites/ball_blue_large.png"),
-                // code to change the size of a sprite
-                sprite: Sprite {
-                    custom_size: Some(Vec2::new(BULLET_SIZE, BULLET_SIZE)),
-                    ..default()
-                },
+    commands.spawn((
+        SpriteBundle {
+            transform: Transform::from_xyz(
+                player_translation.x,
+                player_translation.y + PLAYER_SIZE / 2.0,
+                0.0,
+            ),
+            texture: asset_server.load("sprites/ball_blue_large.png"),
+            // code to change the size of a sprite
+            sprite: Sprite {
+                custom_size: Some(Vec2::new(BULLET_SIZE, BULLET_SIZE)),
                 ..default()
             },
-            Bullet {
-                size: BULLET_SIZE,
-                ..default()
-            },
-        ));
-    }
+            ..default()
+        },
+        Bullet {
+            size: BULLET_SIZE,
+            ..default()
+        },
+    ));
 }
