@@ -3,6 +3,7 @@ use bevy::prelude::*;
 #[derive(Component)]
 pub struct Enemy {
     pub speed: f32,
+    pub size: f32,
     pub direction: Vec3,
 }
 
@@ -10,6 +11,7 @@ impl Default for Enemy {
     fn default() -> Self {
         Enemy {
             speed: 100.0,
+            size: 64.0,
             direction: Vec3 {
                 x: 0.0,
                 y: -1.0,

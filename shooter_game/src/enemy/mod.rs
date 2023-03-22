@@ -10,6 +10,7 @@ pub struct EnemyPlugin;
 impl Plugin for EnemyPlugin {
     fn build(&self, app: &mut App) {
         app.add_startup_system(spawn_enemys)
-            .add_system(move_enemys);
+            .add_system(move_enemys)
+            .add_system(enemy_hit_bullet);
     }
 }

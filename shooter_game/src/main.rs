@@ -1,13 +1,12 @@
 use bevy::{prelude::*, window::PrimaryWindow};
 
-mod player;
 mod bullet;
 mod enemy;
+mod player;
 
-
-use crate::player::*;
 use crate::bullet::*;
 use crate::enemy::*;
+use crate::player::*;
 
 fn main() {
     App::new()
@@ -16,7 +15,7 @@ fn main() {
         .add_plugins(DefaultPlugins.set(WindowPlugin {
             primary_window: Some(Window {
                 title: "Shooter Game".into(),
-                resolution: (700., 900.).into(),
+                resolution: (700.0, 900.0).into(),
                 ..default()
             }),
             ..default()

@@ -1,6 +1,6 @@
 use bevy::{prelude::*, window::PrimaryWindow};
 
-use crate::enemy::components::*;
+use crate::{bullet::components::Bullet, enemy::components::*};
 
 pub fn spawn_enemys(
     mut commands: Commands,
@@ -22,5 +22,27 @@ pub fn spawn_enemys(
 pub fn move_enemys(mut enemy_query: Query<(&mut Transform, &Enemy)>, time: Res<Time>) {
     for (mut transform, enemy) in enemy_query.iter_mut() {
         transform.translation += enemy.direction * enemy.speed * time.delta_seconds();
+    }
+}
+
+pub fn enemy_hit_bullet(
+    mut commands: Commands,
+    bullet_query: Query<(&Transform, Entity, &Bullet)>,
+    enemy_query: Query<(&Transform, Entity, &Enemy)>,
+) {
+    for (enemy_transform, enemy_entity, enemy) in enemy_query.iter() {
+        for (bullet_transform, bullet_entity, bullet) in bullet_query.iter() {
+            let distance = enemy_transform
+                .translation
+                .distance(bullet_transform.translation);
+
+            let bullet_radius = bullet.size / 2.0;
+            let enemy_radius = enemy.size / 2.0;
+            if distance < enemy_radius + bullet_radius {
+                println!("Bullet hit enemy");
+                commands.entity(enemy_entity).despawn();
+                commands.entity(bullet_entity).despawn();
+            }
+        }
     }
 }
