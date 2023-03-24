@@ -19,7 +19,6 @@ impl Plugin for EnemyPlugin {
             // Resources
             .init_resource::<EnemySpawnTimer>()
             // Start up systems
-            .add_startup_system(spawn_enemys)
             // Systems
             .add_systems(
                 (

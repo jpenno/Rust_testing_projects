@@ -4,15 +4,6 @@ use crate::{bullet::components::Bullet, enemy::components::*};
 
 use super::resources::EnemySpawnTimer;
 
-pub fn spawn_enemys(
-    commands: Commands,
-    window_query: Query<&Window, With<PrimaryWindow>>,
-    asset_server: Res<AssetServer>,
-) {
-    let window = window_query.get_single().unwrap();
-    Enemy::spawn(commands, asset_server, window);
-}
-
 pub fn tick_enemy_spawn_timer(mut enemy_spawn_timer: ResMut<EnemySpawnTimer>, time: Res<Time>) {
     enemy_spawn_timer.timer.tick(time.delta());
 }
