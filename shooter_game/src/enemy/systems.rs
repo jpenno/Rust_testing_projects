@@ -2,21 +2,33 @@ use bevy::{prelude::*, window::PrimaryWindow};
 
 use crate::{bullet::components::Bullet, enemy::components::*};
 
+use super::resources::EnemySpawnTimer;
+
 pub fn spawn_enemys(
-    mut commands: Commands,
+    commands: Commands,
     window_query: Query<&Window, With<PrimaryWindow>>,
     asset_server: Res<AssetServer>,
 ) {
     let window = window_query.get_single().unwrap();
+    Enemy::spawn(commands, asset_server, window);
+}
 
-    commands.spawn((
-        SpriteBundle {
-            transform: Transform::from_xyz(window.width() / 2.0, window.height() - 100.0, 0.0),
-            texture: asset_server.load("sprites/ball_red_large.png"),
-            ..default()
-        },
-        Enemy { ..default() },
-    ));
+pub fn tick_enemy_spawn_timer(mut enemy_spawn_timer: ResMut<EnemySpawnTimer>, time: Res<Time>) {
+    enemy_spawn_timer.timer.tick(time.delta());
+}
+
+pub fn spawn_enemys_over_time(
+    commands: Commands,
+    window_query: Query<&Window, With<PrimaryWindow>>,
+    asset_server: Res<AssetServer>,
+    enemy_spawn_timer: Res<EnemySpawnTimer>,
+) {
+    if !enemy_spawn_timer.timer.finished() {
+        return;
+    }
+
+    let window = window_query.get_single().unwrap();
+    Enemy::spawn(commands, asset_server, window);
 }
 
 pub fn move_enemys(mut enemy_query: Query<(&mut Transform, &Enemy)>, time: Res<Time>) {
