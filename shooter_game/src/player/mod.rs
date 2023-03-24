@@ -1,11 +1,13 @@
 use bevy::prelude::*;
 
 pub mod components;
-mod systems;
 pub mod resources;
+mod systems;
 
-use systems::*;
 use resources::*;
+use systems::*;
+
+use crate::SimulationState;
 
 pub struct PlayerPlugin;
 
@@ -13,11 +15,14 @@ impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
         app.init_resource::<PlayerShootTimer>()
             .add_startup_system(spawn_player)
-            .add_system(player_movement)
-            .add_system(confine_player_movement)
-            .add_system(player_shoot)
-            .add_system(tick_player_shoot_timer);
+            .add_systems(
+                (
+                    player_movement,
+                    confine_player_movement,
+                    player_shoot,
+                    tick_player_shoot_timer,
+                )
+                    .in_set(OnUpdate(SimulationState::Running)),
+            );
     }
 }
-
-// componets

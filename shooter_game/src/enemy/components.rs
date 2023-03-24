@@ -26,8 +26,6 @@ impl Default for Enemy {
 
 impl Enemy {
     pub fn spawn(mut commands: Commands, asset_server: Res<AssetServer>, window: &Window) {
-        println!("Spawn Spawn enemy");
-
         let max_x = window.width() - ENEMY_SIZE;
         let random_x = rand::thread_rng().gen_range(64.0..max_x);
         let random_y = window.height() + ENEMY_SIZE + 50.0;
