@@ -1,3 +1,4 @@
+use bevy::app::AppExit;
 use bevy::{prelude::*, window::PrimaryWindow};
 
 mod bullet;
@@ -13,11 +14,10 @@ fn main() {
         // add states
         .add_state::<SimulationState>()
         // add Plugins
-        // .add_plugins(DefaultPlugins)
         .add_plugins(DefaultPlugins.set(WindowPlugin {
             primary_window: Some(Window {
+                resolution: (700.0, 900.0).into(),
                 title: "Shooter Game".into(),
-                resolution: (700.0, 900.).into(),
                 ..default()
             }),
             ..default()
@@ -29,6 +29,7 @@ fn main() {
         .add_startup_system(spawn_camera)
         // add systems
         .add_system(toggle_simulation)
+        .add_system(exit_game)
         .run();
 }
 
@@ -39,6 +40,16 @@ pub fn spawn_camera(mut commands: Commands, window_query: Query<&Window, With<Pr
         transform: Transform::from_xyz(window.width() / 2.0, window.height() / 2.0, 0.0),
         ..default()
     });
+}
+
+pub fn exit_game(
+    keyboard_input: Res<Input<KeyCode>>,
+    mut app_exit_event_writer: EventWriter<AppExit>,
+) {
+    if !keyboard_input.just_pressed(KeyCode::Escape) {
+        return;
+    }
+    app_exit_event_writer.send(AppExit);
 }
 
 #[derive(States, Debug, Clone, Copy, Eq, PartialEq, Hash, Default)]
@@ -53,7 +64,7 @@ pub fn toggle_simulation(
     keyboard_input: Res<Input<KeyCode>>,
     simulation_state: Res<State<SimulationState>>,
 ) {
-    if !keyboard_input.just_pressed(KeyCode::Escape) {
+    if !keyboard_input.just_pressed(KeyCode::Tab) {
         return;
     }
 
