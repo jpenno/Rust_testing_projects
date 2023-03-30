@@ -151,7 +151,7 @@ pub fn player_hit_enemy(
         let player_radius = 64.0 / 2.0;
 
         if distance < player_radius + bullet_radius {
-            println!("Bullet hit player");
+            println!("Player hit enemy");
             commands.entity(player_entity).despawn();
             commands.entity(bullet_entity).despawn();
         }
