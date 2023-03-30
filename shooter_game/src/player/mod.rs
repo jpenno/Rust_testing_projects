@@ -21,6 +21,7 @@ impl Plugin for PlayerPlugin {
                     confine_player_movement,
                     player_shoot,
                     tick_player_shoot_timer,
+                    player_hit_enemy,
                 )
                     .in_set(OnUpdate(SimulationState::Running)),
             );

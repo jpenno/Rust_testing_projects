@@ -1,6 +1,7 @@
 use bevy::{prelude::*, window::PrimaryWindow};
 
 use crate::bullet::components::*;
+use crate::enemy::components::Enemy;
 use crate::player::components::*;
 
 use super::resources::PlayerShootTimer;
@@ -132,4 +133,27 @@ pub fn player_shoot(
             ..default()
         },
     ));
+}
+
+pub fn player_hit_enemy(
+    mut commands: Commands,
+    enemy_query: Query<(&Transform, Entity, &Enemy)>,
+    player_query: Query<(&Transform, Entity, &Player)>,
+) {
+    let Ok((player_transform, player_entity, _player)) = player_query.get_single() else { return };
+
+    for (bullet_transform, bullet_entity, bullet) in enemy_query.iter() {
+        let distance = player_transform
+            .translation
+            .distance(bullet_transform.translation);
+
+        let bullet_radius = bullet.size / 2.0;
+        let player_radius = 64.0 / 2.0;
+
+        if distance < player_radius + bullet_radius {
+            println!("Bullet hit player");
+            commands.entity(player_entity).despawn();
+            commands.entity(bullet_entity).despawn();
+        }
+    }
 }
