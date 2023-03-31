@@ -8,6 +8,22 @@ pub fn tick_enemy_spawn_timer(mut enemy_spawn_timer: ResMut<EnemySpawnTimer>, ti
     enemy_spawn_timer.timer.tick(time.delta());
 }
 
+pub fn tick_enemy_timers(mut enemy_query: Query<&mut Enemy>, time: Res<Time>) {
+    for mut enemy in enemy_query.iter_mut() {
+        enemy.upate_timers(&time);
+    }
+}
+
+pub fn enemy_shoot(
+    mut commands: Commands,
+    asset_server: Res<AssetServer>,
+    enemy_query: Query<(&Enemy, &Transform)>,
+) {
+    for (enemy, enemy_transform) in enemy_query.iter() {
+        enemy.shoot(&mut commands, &asset_server, &enemy_transform);
+    }
+}
+
 pub fn spawn_enemys_over_time(
     commands: Commands,
     window_query: Query<&Window, With<PrimaryWindow>>,

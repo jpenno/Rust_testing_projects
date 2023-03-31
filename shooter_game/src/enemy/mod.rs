@@ -26,6 +26,8 @@ impl Plugin for EnemyPlugin {
                     spawn_enemys_over_time,
                     move_enemys,
                     enemy_hit_bullet,
+                    tick_enemy_timers,
+                    enemy_shoot,
                 )
                     .in_set(OnUpdate(SimulationState::Running)),
             );
