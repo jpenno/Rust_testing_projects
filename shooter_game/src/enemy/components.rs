@@ -24,7 +24,7 @@ impl Default for Enemy {
                 y: -1.0,
                 z: 0.0,
             },
-            shoot_timer: Timer::from_seconds(1.0, TimerMode::Repeating),
+            shoot_timer: Timer::from_seconds(3.0, TimerMode::Repeating),
         }
     }
 }
@@ -56,7 +56,6 @@ impl Enemy {
         enemy_transform: &Transform,
     ) {
         if self.shoot_timer.finished() {
-            println!("Enemy Shoot");
             commands.spawn((
                 SpriteBundle {
                     transform: Transform::from_xyz(
@@ -72,10 +71,7 @@ impl Enemy {
                     },
                     ..default()
                 },
-                Bullet {
-                    size: BULLET_SIZE,
-                    ..default()
-                },
+                Bullet::new(BulletType::Enemy),
             ));
         }
     }

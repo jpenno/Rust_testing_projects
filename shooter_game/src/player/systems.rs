@@ -112,6 +112,7 @@ pub fn player_shoot(
     let player_translation = player_transform.translation;
 
     player_shoot_timer.timer.reset();
+    let bullet = Bullet::new(BulletType::Player);
 
     commands.spawn((
         SpriteBundle {
@@ -128,10 +129,7 @@ pub fn player_shoot(
             },
             ..default()
         },
-        Bullet {
-            size: BULLET_SIZE,
-            ..default()
-        },
+        bullet,
     ));
 }
 
@@ -147,13 +145,36 @@ pub fn player_hit_enemy(
             .translation
             .distance(bullet_transform.translation);
 
-        let bullet_radius = bullet.size / 2.0;
-        let player_radius = 64.0 / 2.0;
+        let enemy_radius = bullet.size / 2.0;
+        let player_radius = PLAYER_SIZE / 2.0;
 
-        if distance < player_radius + bullet_radius {
-            println!("Player hit enemy");
+        if distance < player_radius + enemy_radius {
             commands.entity(player_entity).despawn();
             commands.entity(bullet_entity).despawn();
+        }
+    }
+}
+
+pub fn player_hit_bullet(
+    mut commands: Commands,
+    bullet_query: Query<(&Transform, Entity, &Bullet)>,
+    player_query: Query<(&Transform, Entity, &Player)>,
+) {
+    let Ok((player_transform, player_entity, _player)) = player_query.get_single() else { return };
+
+    for (bullet_transform, bullet_entity, bullet) in bullet_query.iter() {
+        if bullet.bullet_type != BulletType::Player {
+            let distance = player_transform
+                .translation
+                .distance(bullet_transform.translation);
+
+            let bullet_radius = bullet.size / 2.0;
+            let player_radius = PLAYER_SIZE / 2.0;
+
+            if distance < player_radius + bullet_radius {
+                commands.entity(player_entity).despawn();
+                commands.entity(bullet_entity).despawn();
+            }
         }
     }
 }

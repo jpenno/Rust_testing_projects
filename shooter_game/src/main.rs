@@ -11,6 +11,7 @@ use crate::enemy::*;
 use crate::player::*;
 
 fn main() {
+    println!("Press [TAB] to play");
     App::new()
         // add states
         .add_state::<SimulationState>()

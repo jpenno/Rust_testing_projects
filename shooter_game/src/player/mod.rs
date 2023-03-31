@@ -22,6 +22,7 @@ impl Plugin for PlayerPlugin {
                     player_shoot,
                     tick_player_shoot_timer,
                     player_hit_enemy,
+                    player_hit_bullet,
                 )
                     .in_set(OnUpdate(SimulationState::Running)),
             );

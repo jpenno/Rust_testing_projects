@@ -1,6 +1,9 @@
 use bevy::{prelude::*, window::PrimaryWindow};
 
-use crate::{bullet::components::Bullet, enemy::components::*};
+use crate::{
+    bullet::components::{Bullet, BulletType},
+    enemy::components::*,
+};
 
 use super::resources::EnemySpawnTimer;
 
@@ -20,7 +23,7 @@ pub fn enemy_shoot(
     enemy_query: Query<(&Enemy, &Transform)>,
 ) {
     for (enemy, enemy_transform) in enemy_query.iter() {
-        enemy.shoot(&mut commands, &asset_server, &enemy_transform);
+        enemy.shoot(&mut commands, &asset_server, enemy_transform);
     }
 }
 
@@ -51,16 +54,17 @@ pub fn enemy_hit_bullet(
 ) {
     for (enemy_transform, enemy_entity, enemy) in enemy_query.iter() {
         for (bullet_transform, bullet_entity, bullet) in bullet_query.iter() {
-            let distance = enemy_transform
-                .translation
-                .distance(bullet_transform.translation);
+            if bullet.bullet_type != BulletType::Enemy {
+                let distance = enemy_transform
+                    .translation
+                    .distance(bullet_transform.translation);
 
-            let bullet_radius = bullet.size / 2.0;
-            let enemy_radius = enemy.size / 2.0;
-            if distance < enemy_radius + bullet_radius {
-                println!("Bullet hit enemy");
-                commands.entity(enemy_entity).despawn();
-                commands.entity(bullet_entity).despawn();
+                let bullet_radius = bullet.size / 2.0;
+                let enemy_radius = enemy.size / 2.0;
+                if distance < enemy_radius + bullet_radius {
+                    commands.entity(enemy_entity).despawn();
+                    commands.entity(bullet_entity).despawn();
+                }
             }
         }
     }
