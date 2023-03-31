@@ -24,9 +24,9 @@ pub fn exit_game(
 }
 
 pub fn toggle_simulation(
-    mut commands: Commands,
     keyboard_input: Res<Input<KeyCode>>,
     simulation_state: Res<State<SimulationState>>,
+    mut next_simulation_state: ResMut<NextState<SimulationState>>
 ) {
     if !keyboard_input.just_pressed(KeyCode::Tab) {
         return;
@@ -34,11 +34,11 @@ pub fn toggle_simulation(
 
     match simulation_state.0 {
         SimulationState::Running => {
-            commands.insert_resource(NextState(Some(SimulationState::Paused)));
+            next_simulation_state.set(SimulationState::Paused);
             println!("Simulation Paused");
         }
         SimulationState::Paused => {
-            commands.insert_resource(NextState(Some(SimulationState::Running)));
+            next_simulation_state.set(SimulationState::Running);
             println!("Simulation Running");
         }
     }
