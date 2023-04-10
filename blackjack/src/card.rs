@@ -1,5 +1,5 @@
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum Suit {
     Heart,
     Diamond,
@@ -7,10 +7,12 @@ pub enum Suit {
     Club,
 }
 
+#[derive(Clone)]
 pub struct Card {
-    name: String,
-    value: u8,
-    suit: Suit,
+    pub name: String,
+    pub value: u8,
+    pub suit: Suit,
+    pub done: bool,
 }
 
 impl Card {
@@ -19,7 +21,16 @@ impl Card {
             name,
             value: 0,
             suit,
+            done: false,
         };
+    }
+    pub fn get_suit(&self) -> String {
+        match self.suit {
+            Suit::Heart => "Heart".to_string(),
+            Suit::Diamond => "Diamond".to_string(),
+            Suit::Spade => "Spade".to_string(),
+            Suit::Club => "Club".to_string(),
+        }
     }
     pub fn print(&self){
         println!("{0} {1:?} {2}", self.name, self.suit, self.value);
