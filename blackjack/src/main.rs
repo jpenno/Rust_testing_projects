@@ -1,10 +1,10 @@
+#![allow(dead_code)]
+
 mod card;
 
 use crate::card::*;
 
 fn main() {
-    println!("Hello, world!");
-
     let deck = Deck::new();
 
     deck.print();
@@ -18,52 +18,62 @@ impl Deck {
     fn new() -> Self {
         let mut cards: Vec<Card> = Vec::new();
         // Diamds
-        for i in 1..=10 {
-            cards.push(Card::new(i.to_string(), Suit::Diamond));
-        }
+        Deck::spawn_suit_of_cards(&mut cards, Suit::Diamond);
+
         // Hearts
-        for i in 5..=10 {
-            cards.push(Card::new(i.to_string(), Suit::Heart));
-        }
+        Deck::spawn_suit_of_cards(&mut cards, Suit::Heart);
 
         // spade
-        for i in 1..=4 {
-            cards.push(Card::new(i.to_string(), Suit::Spade));
-        }
+        Deck::spawn_suit_of_cards(&mut cards, Suit::Spade);
 
         // club
-        for i in 1..=10 {
-            cards.push(Card::new(i.to_string(), Suit::Club));
-        }
+        Deck::spawn_suit_of_cards(&mut cards, Suit::Club);
 
         Deck { cards }
     }
 
     fn print(&self) {
-        let mut names: Vec<String> = Vec::new();
+        let mut diamonds: Vec<Card> = Vec::new();
+        let mut hearts: Vec<Card> = Vec::new();
+        let mut spades: Vec<Card> = Vec::new();
+        let mut clubs: Vec<Card> = Vec::new();
 
         for card in &self.cards {
-            if !names.contains(&card.name) {
-                names.push(card.name.clone());
+            match card.suit {
+                Suit::Heart => hearts.push(card.clone()),
+                Suit::Diamond => diamonds.push(card.clone()),
+                Suit::Spade => spades.push(card.clone()),
+                Suit::Club => clubs.push(card.clone()),
             }
         }
-        println!("Names: {:?}", names);
 
-        for name in names {
-            let mut print_cards: Vec<Card> = Vec::new();
-            for card in &self.cards {
-                if name == card.name {
-                    print_cards.push(card.clone());
+        for i in 0..=10 {
+            Deck::print_card_list(&hearts, i);
+            Deck::print_card_list(&diamonds, i);
+            Deck::print_card_list(&spades, i);
+            Deck::print_card_list(&clubs, i);
+            println!("");
+        }
+    }
+
+    fn print_card_list(card_list: &Vec<Card>, i: u32) {
+        // print spades
+        for spade in card_list {
+            if spade.name == i.to_string() {
+                if i != 10 {
+                    print!(" ");
                 }
+                print!("{} {} ", spade.name, spade.get_suit());
+                break;
+            } else if spade == card_list.last().unwrap() {
+                print!("         ");
             }
-            let mut print_string = String::new();
-            for p in print_cards {
-                print_string.push_str(&p.name);
-                print_string.push_str(" ");
-                print_string.push_str(&p.get_suit());
-                print_string.push_str(" | ");
-            }
-            println!("{}", print_string);
+        }
+    }
+
+    fn spawn_suit_of_cards(cards: &mut Vec<Card>, suit: Suit) {
+        for i in 1..=10 {
+            cards.push(Card::new(i.to_string(), suit.clone()));
         }
     }
 }

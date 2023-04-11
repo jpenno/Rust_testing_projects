@@ -1,5 +1,5 @@
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Suit {
     Heart,
     Diamond,
@@ -7,7 +7,7 @@ pub enum Suit {
     Club,
 }
 
-#[derive(Clone)]
+#[derive(Clone, PartialEq, Eq)]
 pub struct Card {
     pub name: String,
     pub value: u8,
