@@ -64,7 +64,6 @@ impl Enemy {
                         0.0,
                     ),
                     texture: asset_server.load("sprites/ball_blue_large.png"),
-                    // code to change the size of a sprite
                     sprite: Sprite {
                         custom_size: Some(Vec2::new(BULLET_SIZE, BULLET_SIZE)),
                         ..default()
