@@ -3,7 +3,6 @@
 mod card;
 mod deck;
 
-// use crate::card::*;
 use crate::deck::*;
 
 fn main() {

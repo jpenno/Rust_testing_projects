@@ -1,4 +1,3 @@
-
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Suit {
     Heart,
@@ -10,19 +9,33 @@ pub enum Suit {
 #[derive(Clone, PartialEq, Eq)]
 pub struct Card {
     pub name: String,
-    pub value: u8,
+    pub value: u32,
     pub suit: Suit,
     pub done: bool,
 }
 
 impl Card {
-    pub fn new(name: String, suit: Suit) -> Card {
-        return Card {
+    pub fn new(name: String, suit: Suit) -> Result<Card, String> {
+        let value: u32 = if let Ok(num) = name.parse() {
+            num
+        } else {
+            match name.chars().next() {
+                Some('J') | Some('Q') | Some('K') => 10,
+                None => {
+                    return Err("No name".to_string());
+                }
+                _ => {
+                    return Err("Name not handled".to_string());
+                }
+            }
+        };
+
+        Ok(Card {
             name,
-            value: 0,
+            value,
             suit,
             done: false,
-        };
+        })
     }
     pub fn get_suit(&self) -> String {
         match self.suit {
@@ -32,7 +45,10 @@ impl Card {
             Suit::Club => "Club".to_string(),
         }
     }
-    pub fn print(&self){
-        println!("{0} {1:?} {2}", self.name, self.suit, self.value);
+    pub fn print(&self) {
+        println!(
+            "Name: {} Suit: {:?} Vallue: {}",
+            self.name, self.suit, self.value
+        );
     }
 }
