@@ -7,7 +7,7 @@ pub struct Deck {
 impl Deck {
     pub fn new() -> Self {
         let mut cards: Vec<Card> = Vec::new();
-        // Diamds
+        // Diamonds
         Deck::spawn_suit_of_cards(&mut cards, Suit::Diamond);
         // Hearts
         Deck::spawn_suit_of_cards(&mut cards, Suit::Heart);
