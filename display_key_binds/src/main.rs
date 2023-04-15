@@ -5,17 +5,22 @@ use keybind::*;
 use std::{fs, path::PathBuf};
 
 fn main() {
-    let mut in_file_content = String::new();
-
     let mut path: PathBuf = PathBuf::new();
 
     if let Some(home) = dirs::home_dir() {
         path.push(home);
         path.push("dotfiles/sxhkd/sxhkdrc");
-        println!("home: {:?}", path);
     }
 
-    in_file_content.push_str(&fs::read_to_string(path).expect("Error reading file"));
+    let file_content: String;
+    match fs::read_to_string(&path) {
+        Ok(file) => file_content = file,
+        Err(err) => {
+            println!("Path: {:?}", path);
+            print!("Err: {err}");
+            return;
+        }
+    }
 
     let mut keybinds: Vec<Keybind> = Vec::<Keybind>::new();
 
@@ -23,11 +28,11 @@ fn main() {
     let mut catagori = String::new();
     let mut change_catagori = false;
 
-    for line in in_file_content.split('\n') {
+    for line in file_content.split('\n') {
         if let Some(first_char) = line.chars().next() {
             if first_char == '#' {
                 // get catagori
-                if (line.as_bytes()[1] as char) == '#'  && !change_catagori{
+                if (line.as_bytes()[1] as char) == '#' && !change_catagori {
                     change_catagori = true;
                     continue;
                 }
@@ -64,5 +69,6 @@ fn main() {
     println!("Print Keybinds");
     for keybind in keybinds {
         keybind.print();
+        println!("");
     }
 }
