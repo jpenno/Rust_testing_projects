@@ -6,7 +6,7 @@ pub enum Suit {
     Club,
 }
 
-#[derive(Clone, PartialEq, Eq)]
+#[derive(Clone, PartialEq, Eq, Debug)]
 pub struct Card {
     pub name: String,
     pub value: u32,

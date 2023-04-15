@@ -1,4 +1,7 @@
 use crate::card::*;
+//use rand::Rng;
+use rand::seq::SliceRandom;
+use rand::thread_rng;
 
 pub struct Deck {
     cards: Vec<Card>,
@@ -7,7 +10,7 @@ pub struct Deck {
 impl Deck {
     pub fn new() -> Self {
         let mut cards: Vec<Card> = Vec::new();
-        // Diamds
+        // Diamonds
         Deck::spawn_suit_of_cards(&mut cards, Suit::Diamond);
         // Hearts
         Deck::spawn_suit_of_cards(&mut cards, Suit::Heart);
@@ -19,13 +22,20 @@ impl Deck {
         Deck { cards }
     }
 
+    pub fn draw(&mut self) -> Card {
+        self.cards.pop().unwrap()
+    }
+
     pub fn print(&self) {
         for card in &self.cards {
             card.print();
         }
     }
 
+    // not working
     pub fn print_fmt(&self) {
+        println!("print_fmt Not working");
+
         let mut diamonds: Vec<Card> = Vec::new();
         let mut hearts: Vec<Card> = Vec::new();
         let mut spades: Vec<Card> = Vec::new();
@@ -59,9 +69,9 @@ impl Deck {
                 break;
             } else if card == card_list.last().unwrap() {
                 // print!("         ");
-            } else if card.name.chars().next().unwrap() == 'J'
-                || card.name.chars().next().unwrap() == 'Q'
-                || card.name.chars().next().unwrap() == 'K'
+            } else if card.name.starts_with('J')
+                || card.name.starts_with('Q')
+                || card.name.starts_with('K')
             {
                 print!(" {} {} ", card.name, card.get_suit());
             }
@@ -83,5 +93,9 @@ impl Deck {
                 cards.push(Card::new("K".to_string(), suit.clone()).unwrap());
             }
         }
+    }
+
+    pub fn shuffle(&mut self) {
+        self.cards.shuffle(&mut thread_rng());
     }
 }
