@@ -1,4 +1,7 @@
 #![allow(dead_code)]
+mod keybind;
+
+use keybind::*;
 use std::{fs, path::PathBuf};
 
 fn main() {
@@ -59,40 +62,7 @@ fn main() {
     }
 
     println!("Print Keybinds");
-    for name in keybinds {
-        println!("Name: {}", name.name);
-        println!("catagori: {}", name.catagori);
-        for key in name.key {
-            println!("Key: {}", key);
-        }
-    }
-}
-
-#[derive(Debug)]
-struct Keybind {
-    name: String,
-    catagori: String,
-    key: Vec<String>,
-}
-
-impl Keybind {
-    fn new() -> Keybind {
-        Keybind {
-            name: String::new(),
-            catagori: String::new(),
-            key: Vec::<String>::new(),
-        }
-    }
-
-    fn set_name(&mut self, name: String) {
-        self.name = name;
-    }
-
-    fn set_catagori(&mut self, c: String) {
-        self.catagori = c;
-    }
-
-    fn add_key(&mut self, key: String) {
-        self.key.push(key);
+    for keybind in keybinds {
+        keybind.print();
     }
 }
