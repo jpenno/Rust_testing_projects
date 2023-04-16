@@ -1,26 +1,31 @@
 #![allow(dead_code)]
+mod config;
 mod keybind;
 
 use keybind::*;
-use std::{fs, path::PathBuf};
+use std::fs;
+
+use crate::config::Config;
 
 fn main() {
-    let mut path: PathBuf = PathBuf::new();
-
-    if let Some(home) = dirs::home_dir() {
-        path.push(home);
-        path.push("dotfiles/sxhkd/sxhkdrc");
-    }
-
-    let file_content: String;
-    match fs::read_to_string(&path) {
-        Ok(file) => file_content = file,
+    let config: Config = match Config::new() {
+        Ok(config) => config,
         Err(err) => {
-            println!("Path: {:?}", path);
-            print!("Err: {err}");
+            println!("Err: {err}");
             return;
         }
-    }
+    };
+
+    println!("Main config path: {}", config.path);
+
+    let file_content: String = match fs::read_to_string(&config.path) {
+        Ok(file) => file,
+        Err(err) => {
+            println!("Path: {:?}", config.path);
+            print!("Config Err: {err}");
+            return;
+        }
+    };
 
     let mut keybinds: Vec<Keybind> = Vec::<Keybind>::new();
 
@@ -69,6 +74,6 @@ fn main() {
     println!("Print Keybinds");
     for keybind in keybinds {
         keybind.print();
-        println!("");
+        println!();
     }
 }
