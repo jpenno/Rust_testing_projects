@@ -16,8 +16,6 @@ fn main() {
         }
     };
 
-    println!("Main config path: {}", config.path);
-
     let file_content: String = match fs::read_to_string(&config.path) {
         Ok(file) => file,
         Err(err) => {
@@ -27,13 +25,21 @@ fn main() {
         }
     };
 
-    let mut keybinds: Vec<Keybind> = Vec::<Keybind>::new();
+    let keybinds: Vec<Keybind> = get_keybinds_from_file(file_content);
 
-    keybinds.push(Keybind::new());
+    println!("Print Keybinds");
+    for keybind in keybinds {
+        keybind.print();
+        println!();
+    }
+}
+
+fn get_keybinds_from_file(file: String) -> Vec<Keybind> {
+    let mut keybinds: Vec<Keybind> = Vec::new();
     let mut catagori = String::new();
     let mut change_catagori = false;
 
-    for line in file_content.split('\n') {
+    for line in file.split('\n') {
         if let Some(first_char) = line.chars().next() {
             if first_char == '#' {
                 // get catagori
@@ -42,7 +48,6 @@ fn main() {
                     continue;
                 }
                 if (line.as_bytes()[1] as char) == ' ' && change_catagori {
-                    // println!("catagori: {catagori}");
                     catagori = line.to_string();
                     continue;
                 }
@@ -70,10 +75,5 @@ fn main() {
             }
         };
     }
-
-    println!("Print Keybinds");
-    for keybind in keybinds {
-        keybind.print();
-        println!();
-    }
+    keybinds
 }

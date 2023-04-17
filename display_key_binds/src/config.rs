@@ -9,7 +9,7 @@ impl Config {
         let path = String::from("./res/keybind.conf");
 
         let file: String = match fs::read_to_string(&path) {
-            Ok(in_file) =>  in_file,
+            Ok(in_file) => in_file,
             Err(err) => {
                 println!("Path: {:?}", path);
                 print!("Err: {err}");
@@ -32,8 +32,6 @@ impl Config {
                         path.push(c);
                     }
                 }
-                path = path.trim().to_string();
-                println!("Config Path: {}", path);
                 config.path = path;
             }
         }
