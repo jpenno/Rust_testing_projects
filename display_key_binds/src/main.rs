@@ -3,7 +3,7 @@ mod config;
 mod keybind;
 
 use keybind::*;
-use std::fs;
+use std::{fs, io};
 
 use crate::config::Config;
 
@@ -25,55 +25,30 @@ fn main() {
         }
     };
 
-    let keybinds: Vec<Keybind> = get_keybinds_from_file(file_content);
+    let keybinds: Vec<Keybind> = Keybind::get_keybinds_from_file(file_content);
 
+    // print all keybinds
     println!("Print Keybinds");
-    for keybind in keybinds {
+    for keybind in &keybinds {
         keybind.print();
         println!();
     }
-}
 
-fn get_keybinds_from_file(file: String) -> Vec<Keybind> {
-    let mut keybinds: Vec<Keybind> = Vec::new();
-    let mut catagori = String::new();
-    let mut change_catagori = false;
+    println!("Select a catagori");
 
-    for line in file.split('\n') {
-        if let Some(first_char) = line.chars().next() {
-            if first_char == '#' {
-                // get catagori
-                if (line.as_bytes()[1] as char) == '#' && !change_catagori {
-                    change_catagori = true;
-                    continue;
-                }
-                if (line.as_bytes()[1] as char) == ' ' && change_catagori {
-                    catagori = line.to_string();
-                    continue;
-                }
-                if (line.as_bytes()[1] as char) == '#' && change_catagori {
-                    change_catagori = false;
-                    continue;
-                }
-                keybinds.push(Keybind::new());
-                // set name
-                if let Some(last) = keybinds.last_mut() {
-                    last.set_name(line.to_string());
-                    last.set_catagori(catagori.clone());
-                } else {
-                    println!("last not there")
-                }
-                continue;
-            }
-            if !line.starts_with('\t') {
-                if let Some(last) = keybinds.last_mut() {
-                    last.add_key(line.to_string());
-                } else {
-                    println!("last not there")
-                }
-                continue;
-            }
-        };
+    // get catagori from the user
+    let mut input = String::new();
+    io::stdin()
+        .read_line(&mut input)
+        .expect("Failed to read line");
+
+    let input = input.trim();
+
+    // print all keybinds in selected catagori
+    for keybind in keybinds {
+        if keybind.catagori == input.trim() {
+            keybind.print();
+            println!();
+        }
     }
-    keybinds
 }
