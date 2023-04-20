@@ -1,35 +1,23 @@
 #![allow(dead_code)]
 mod config;
 mod keybind;
+mod keybinds;
 
-use keybind::*;
-use std::{fs, io};
-
-use crate::config::Config;
+use keybinds::*;
+use std::io;
 
 fn main() {
-    let config: Config = match Config::new() {
-        Ok(config) => config,
+    let keybinds: Keybinds = match Keybinds::new() {
+        Ok(keys) => keys,
         Err(err) => {
-            println!("Err: {err}");
+            println!("{err}");
             return;
         }
     };
-
-    let file_content: String = match fs::read_to_string(&config.path) {
-        Ok(file) => file,
-        Err(err) => {
-            println!("Path: {:?}", config.path);
-            print!("Config Err: {err}");
-            return;
-        }
-    };
-
-    let keybinds: Vec<Keybind> = Keybind::get_keybinds_from_file(file_content);
 
     // print all keybinds
     println!("Print Keybinds");
-    for keybind in &keybinds {
+    for keybind in &keybinds.keybinds {
         keybind.print();
         println!();
     }
@@ -45,7 +33,7 @@ fn main() {
     let input = input.trim();
 
     // print all keybinds in selected catagori
-    for keybind in keybinds {
+    for keybind in keybinds.keybinds {
         if keybind.catagori == input.trim() {
             keybind.print();
             println!();
