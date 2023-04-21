@@ -3,11 +3,22 @@ mod config;
 mod keybind;
 mod keybinds;
 
+#[cfg(test)]
+mod test;
+
+use config::*;
 use keybinds::*;
 use std::io;
 
 fn main() {
-    let keybinds: Keybinds = match Keybinds::new() {
+    let config: Config = match Config::new() {
+        Ok(config) => config,
+        Err(err) => {
+            println!("Config: {err}");
+            return;
+        }
+    };
+    let keybinds: Keybinds = match Keybinds::new(&config.path) {
         Ok(keys) => keys,
         Err(err) => {
             println!("{err}");
