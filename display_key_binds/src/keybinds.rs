@@ -5,6 +5,7 @@ use crate::keybind::*;
 #[derive(Debug)]
 pub struct Keybinds {
     pub keybinds: Vec<Keybind>,
+    pub catagories: Vec<String>,
     pub file_path: String,
 }
 
@@ -17,8 +18,12 @@ impl Keybinds {
             }
         };
 
+        let keybinds = Self::get_keybinds_from_file(&file_content);
+        let catagories = Self::get_catagories(&keybinds);
+
         Ok(Keybinds {
-            keybinds: Self::get_keybinds_from_file(&file_content),
+            keybinds,
+            catagories,
             file_path: path.to_string(),
         })
     }
@@ -65,5 +70,17 @@ impl Keybinds {
             };
         }
         keybinds
+    }
+
+    fn get_catagories(keybinds: &Vec<Keybind>) -> Vec<String> {
+        let mut catagories: Vec<String> = Vec::new();
+
+        for keybind in keybinds {
+            if !catagories.contains(&keybind.catagori) {
+                catagories.push(keybind.catagori.to_string());
+            }
+        }
+
+        catagories
     }
 }
