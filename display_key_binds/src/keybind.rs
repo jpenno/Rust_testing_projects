@@ -1,8 +1,8 @@
 #[derive(Debug)]
 pub struct Keybind {
-    name: String,
-    catagori: String,
-    key: Vec<String>,
+    pub catagori: String,
+    pub name: String,
+    pub key: Vec<String>,
 }
 
 impl Keybind {
@@ -14,12 +14,12 @@ impl Keybind {
         }
     }
 
-    pub fn set_name(&mut self, name: String) {
-        self.name = name;
+    pub fn set_name(&mut self, name: &String) {
+        self.name = Self::clean_string(name);
     }
 
-    pub fn set_catagori(&mut self, c: String) {
-        self.catagori = c;
+    pub fn set_catagori(&mut self, catagori: &String) {
+        self.catagori = Self::clean_string(catagori);
     }
 
     pub fn add_key(&mut self, key: String) {
@@ -30,7 +30,14 @@ impl Keybind {
         println!("Name: {}", self.name);
         println!("catagori: {}", self.catagori);
         for key in &self.key {
-            println!("Key: {}", key);
+            println!("Key: {key}");
+        }
+    }
+    fn clean_string(string: &String) -> String {
+        if string.starts_with('#') {
+            string.as_str()[1..string.len()].trim().to_lowercase()
+        } else {
+            string.trim().to_string()
         }
     }
 }
