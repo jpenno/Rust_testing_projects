@@ -28,7 +28,15 @@ impl Keybinds {
         })
     }
 
-    fn get_keybinds_from_file(file: &String) -> Vec<Keybind> {
+    pub fn print_catagories(&self) {
+        let mut i = 1;
+        for catagori in &self.catagories {
+            println!("{}: {}", i, catagori);
+            i += 1;
+        }
+    }
+
+    fn get_keybinds_from_file(file: &str) -> Vec<Keybind> {
         let mut keybinds: Vec<Keybind> = Vec::new();
         let mut catagori = String::new();
         let mut change_catagori = false;
