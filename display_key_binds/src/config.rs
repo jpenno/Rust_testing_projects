@@ -6,15 +6,11 @@ pub struct Config {
 
 impl Config {
     pub fn new() -> Result<Config, String> {
-        let path = String::from("./res/keybind.conf");
+        let paths: Vec<&str> = vec!["keybind.conf", "./res/keyind.conf"];
 
-        let file: String = match fs::read_to_string(&path) {
-            Ok(in_file) => in_file,
-            Err(err) => {
-                println!("Path: {:?}", path);
-                print!("Err: {err}");
-                return Err(format!("Path: {}, Err: {}", path, err));
-            }
+        let file = match load_from_paths(&paths) {
+            Ok(file) => file,
+            Err(err) => return Err(err),
         };
 
         let mut config = Config {
@@ -37,4 +33,15 @@ impl Config {
         }
         Ok(config)
     }
+}
+
+fn load_from_paths(paths: &Vec<&str>) -> Result<String, String> {
+    for path in paths {
+        match fs::read_to_string(path) {
+            Ok(file) => return Ok(file),
+            Err(err) => return Err(err.to_string()),
+        };
+    }
+
+    Err(String::from("error no config file found"))
 }
